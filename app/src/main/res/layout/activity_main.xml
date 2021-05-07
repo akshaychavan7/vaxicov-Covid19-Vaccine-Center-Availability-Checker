@@ -29,7 +29,7 @@
                 android:layout_gravity="center"
                 android:textStyle="bold"
                 android:textSize="18dp"
-                android:textColor="@color/colorBlack"
+                android:textColor="@color/colorLightGrey"
                 />
 
         </androidx.appcompat.widget.Toolbar>
@@ -40,15 +40,98 @@
         <!--            android:layout_height="wrap_content"-->
         <!--            />-->
         <!--  MainActivity Body      -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/fragment_container"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+            </LinearLayout>
+
+            <RadioGroup
+                android:checkedButton="@+id/offer"
+                android:id="@+id/toggle"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/pink_out_line"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:id="@+id/search"
+                    android:background="@drawable/toggle_widget_background"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:checked="true"
+                    android:text="Find by pincode"
+                    android:textColor="@color/colorLightGrey" />
+
+                <RadioButton
+                    android:layout_marginRight="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:id="@+id/offer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_widget_background"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:checked="false"
+                    android:text="Find by District"
+                    android:textColor="@color/colorLightGrey" />
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/et_pin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:drawableStart="@drawable/custom_pin_icon"
+                android:drawablePadding="12dp"
+                android:background="@drawable/custom_input"
+                android:ems="10"
+                android:textSize="18dp"
+                android:hint="111111"
+                android:textColorHint="#474747"
+                />
+            <EditText
+                android:id="@+id/et_district"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:drawableStart="@drawable/custom_agegroup_icon"
+                android:drawablePadding="12dp"
+                android:background="@drawable/custom_input"
+                android:ems="10"
+                android:textSize="18dp"
+                android:hint="18-45"
+                android:textColorHint="#474747"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -69,6 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="10dp"
+            android:textColor="@color/colorLightGrey"
             android:textSize="13dp"
             android:text="Developed with ❤ by Akshay Chavan"/>
 
