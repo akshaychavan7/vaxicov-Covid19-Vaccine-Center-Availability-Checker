@@ -1,17 +1,15 @@
 package pojo;
 
 /**
- * Created by Akshay Chavan on 07,May,2021
+ * Created by Akshay Chavan on 08,May,2021
  * akshaychavan.kkwedu@gmail.com
  */
-
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
 
-
-public class Center {
+public class CenterDistrict {
 
     @SerializedName("center_id")
     @Expose

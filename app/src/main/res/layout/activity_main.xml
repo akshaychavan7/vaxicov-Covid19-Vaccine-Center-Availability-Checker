@@ -21,16 +21,30 @@
             app:popupTheme="@style/Theme.AppCompat.Light"
             app:titleTextColor="@color/colorBlack"
             >
-            <TextView
-                android:id="@+id/toolbar_title"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CoWIN"
                 android:layout_gravity="center"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@color/colorLightGrey"
-                />
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:src="@mipmap/flag1"
+                    />
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CoWIN"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:textColor="@color/colorLightGrey"
+                    />
+
+            </LinearLayout>
+
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -48,88 +62,269 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:background="@drawable/custom_input"
+                android:elevation="5dp"
+                android:layout_margin="10dp"
+                android:orientation="vertical"
+               >
 
+                <RadioGroup
+                    android:id="@+id/rg_findby"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/pink_out_line"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/findbypin"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/toggle_widget_background"
+                        android:button="@null"
+                        android:checked="true"
+                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:gravity="center"
+                        android:text="Find by pincode"
+                        android:textColor="@color/colorLightGrey"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/findbydistrict"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/toggle_widget_background"
+                        android:button="@null"
+                        android:checked="false"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/roboto_condensed_bold"
+                        android:gravity="center"
+                        android:text="Find by District"
+                        android:textColor="@color/colorLightGrey" />
+                </RadioGroup>
+
+                <AutoCompleteTextView
+                    android:id="@+id/et_state"
+                    android:layout_width="match_parent"
+                    android:visibility="visible"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:drawableStart="@drawable/custom_pin_icon"
+                    android:drawablePadding="12dp"
+                    android:background="@drawable/custom_input"
+                    android:ems="10"
+                    android:textSize="18dp"
+                    android:textColor="@color/colorLightGrey"
+                    android:hint="State"
+                    android:textColorHint="#474747"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/et_district"
+                    android:layout_width="match_parent"
+                    android:visibility="visible"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:drawableStart="@drawable/custom_pin_icon"
+                    android:drawablePadding="12dp"
+                    android:background="@drawable/custom_input"
+                    android:ems="10"
+                    android:textSize="18dp"
+                    android:textColor="@color/colorLightGrey"
+                    android:hint="District"
+                    android:textColorHint="#474747"
+                    />
+
+                <EditText
+                    android:id="@+id/et_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:visibility="gone"
+                    android:drawableStart="@drawable/custom_pin_icon"
+                    android:drawablePadding="12dp"
+                    android:background="@drawable/custom_input"
+                    android:ems="10"
+                    android:textSize="18dp"
+                    android:textColor="@color/colorLightGrey"
+                    android:hint="Pincode"
+                    android:inputType="number"
+                    android:textColorHint="#474747"
+                    />
+                <EditText
+                    android:id="@+id/et_agegroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:drawableStart="@drawable/custom_agegroup_icon"
+                    android:drawablePadding="12dp"
+                    android:background="@drawable/custom_input"
+                    android:ems="10"
+                    android:textSize="18dp"
+                    android:textColor="@color/colorLightGrey"
+                    android:hint="Age Group"
+                    android:inputType="none"
+                    android:editable="false"
+                    android:textColorHint="#474747"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:weightSum="2">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_search"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Search"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorLightGrey"
+                        app:cornerRadius="5dp"
+                        android:backgroundTint="#FFA726"
+                        android:layout_weight="1"
+                        android:textSize="18dp"
+                        />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_notify"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Notify Me"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorLightGrey"
+                        app:cornerRadius="5dp"
+                        android:backgroundTint="#66BB6A"
+                        android:layout_weight="1"
+                        android:textSize="18dp"
+                        />
+                </LinearLayout>
             </LinearLayout>
 
-            <RadioGroup
-                android:checkedButton="@+id/offer"
-                android:id="@+id/toggle"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/pink_out_line"
-                android:orientation="horizontal">
 
-                <RadioButton
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
-                    android:layout_marginLeft="1dp"
-                    android:id="@+id/search"
-                    android:background="@drawable/toggle_widget_background"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:checked="true"
-                    android:text="Find by pincode"
-                    android:textColor="@color/colorLightGrey" />
-
-                <RadioButton
-                    android:layout_marginRight="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
-                    android:id="@+id/offer"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/toggle_widget_background"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:checked="false"
-                    android:text="Find by District"
-                    android:textColor="@color/colorLightGrey" />
-            </RadioGroup>
-
-            <EditText
-                android:id="@+id/et_pin"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:drawableStart="@drawable/custom_pin_icon"
-                android:drawablePadding="12dp"
-                android:background="@drawable/custom_input"
-                android:ems="10"
-                android:textSize="18dp"
-                android:hint="111111"
-                android:textColorHint="#474747"
-                />
-            <EditText
-                android:id="@+id/et_district"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:drawableStart="@drawable/custom_agegroup_icon"
-                android:drawablePadding="12dp"
-                android:background="@drawable/custom_input"
-                android:ems="10"
-                android:textSize="18dp"
-                android:hint="18-45"
-                android:textColorHint="#474747"
-                />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_no_slots"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No slots available :("
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/colorRed"
+                    android:textAlignment="center"
+                    android:textSize="24dp"
+                    android:visibility="gone"
+                    />
+
+                <!--   Availibility Info Table         -->
+                <LinearLayout
+                    android:id="@+id/ll_details_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:text="Center"
+                            android:textStyle="bold"
+                            android:textSize="14dp"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:text="Vaccine"
+                            android:textStyle="bold"
+                            android:textSize="14dp"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:text="Date"
+                            android:textStyle="bold"
+                            android:textSize="14dp"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:text="Availability"
+                            android:textStyle="bold"
+                            android:textSize="14dp"
+                            />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/editTextBorder"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_availability_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp" />
+
+                    <!--                <include layout="@layout/details_row"/>-->
+
+                </LinearLayout>
+
+
+                <ProgressBar
+                    android:id="@+id/progressbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    />
+
+
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -142,7 +337,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        android:background="@color/background_main"
+        android:background="@color/background_overlay"
         app:itemIconTint="@drawable/nav_drawer_tab_color"
         app:itemTextColor="@drawable/nav_drawer_tab_color"
         >

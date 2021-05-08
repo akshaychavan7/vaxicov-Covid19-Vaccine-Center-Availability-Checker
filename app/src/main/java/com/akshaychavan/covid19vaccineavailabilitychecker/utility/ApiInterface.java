@@ -6,11 +6,15 @@ package com.akshaychavan.covid19vaccineavailabilitychecker.utility;
  */
 
 
+import pojo.CalendarByDistrictPojo;
 import pojo.CalendarByPinPojo;
 import pojo.FindCenterByPinPojo;
+import pojo.GetDistrictsByStatesPojo;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
@@ -25,4 +29,11 @@ public interface ApiInterface {
     @GET("appointment/sessions/public/calendarByPin")
     Call<CalendarByPinPojo> findCalendarByPin(@Query("pincode") int pincode, @Query("date") String date);
 
+    @Headers("user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+    @GET("appointment/sessions/public/calendarByDistrict")
+    Call<CalendarByDistrictPojo> findCalendarByDistrict(@Query("district_id") int district_id, @Query("date") String date);
+
+    @Headers("user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+    @GET("admin/location/districts/{state_id}")
+    Call<GetDistrictsByStatesPojo> getDistrictsByState(@Path("state_id") int state_id);
 }

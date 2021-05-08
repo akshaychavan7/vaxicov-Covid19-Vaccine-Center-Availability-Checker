@@ -2,4 +2,8 @@
     <string name="app_name">Covid19 Vaccine Availability Checker</string>
     <string name="navigation_drawer_open">Open Navigation Drawer</string>
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
+    <string-array name="agegroups">
+        <item>18-44</item>
+        <item>45+</item>
+    </string-array>
 </resources>

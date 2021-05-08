@@ -8,12 +8,15 @@
 
 
     <color name="background_main">#121212</color>
-    <color name="background_overlay">#3C3C3C</color>
+    <color name="background_overlay">#1E1E1E</color>
     <color name="colorWhite">#FFF</color>
     <color name="colorBlack">#000</color>
+    <color name="colorRed">#EF5350</color>
     <color name="colorLightGrey">#DCDCDC</color>
     <color name="editTextBorder">#474747</color>
     <color name="colorTransparent">#00000000</color>
     <color name="nonSelectedTabBg">#232222</color>
+
+    <color name="test">#1B5E20</color>
 
 </resources>
