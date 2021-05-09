@@ -30,18 +30,20 @@
                 >
                 <ImageView
                     android:layout_width="30dp"
-                    android:layout_height="25dp"
+                    android:layout_height="match_parent"
                     android:src="@mipmap/flag1"
                     />
+
                 <TextView
                     android:id="@+id/toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CoWIN"
-                    android:textStyle="bold"
-                    android:textSize="18dp"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/quantico"
+                    android:text="vaxicov"
                     android:textColor="@color/colorLightGrey"
-                    />
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -117,13 +119,14 @@
                 <AutoCompleteTextView
                     android:id="@+id/et_state"
                     android:layout_width="match_parent"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_height="50dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
+                    android:fontFamily="@font/roboto_condensed_regular"
                     android:drawableStart="@drawable/custom_pin_icon"
                     android:drawablePadding="12dp"
                     android:background="@drawable/custom_input"
@@ -137,13 +140,14 @@
                 <AutoCompleteTextView
                     android:id="@+id/et_district"
                     android:layout_width="match_parent"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
+                    android:fontFamily="@font/roboto_condensed_regular"
                     android:drawableStart="@drawable/custom_pin_icon"
                     android:drawablePadding="12dp"
                     android:background="@drawable/custom_input"
@@ -163,7 +167,7 @@
                     android:layout_marginRight="20dp"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:drawableStart="@drawable/custom_pin_icon"
                     android:drawablePadding="12dp"
                     android:background="@drawable/custom_input"
@@ -183,6 +187,7 @@
                     android:layout_marginRight="20dp"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
+                    android:fontFamily="@font/roboto_condensed_regular"
                     android:drawableStart="@drawable/custom_agegroup_icon"
                     android:drawablePadding="12dp"
                     android:background="@drawable/custom_input"
@@ -208,11 +213,12 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
+                        android:fontFamily="@font/roboto_condensed_regular"
                         android:text="Search"
                         android:textAllCaps="false"
                         android:textColor="@color/colorLightGrey"
                         app:cornerRadius="5dp"
-                        android:backgroundTint="#FFA726"
+                        android:backgroundTint="@color/colorOrange"
                         android:layout_weight="1"
                         android:textSize="18dp"
                         />
@@ -222,10 +228,11 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:text="Notify Me"
+                        android:fontFamily="@font/roboto_condensed_regular"
                         android:textAllCaps="false"
                         android:textColor="@color/colorLightGrey"
                         app:cornerRadius="5dp"
-                        android:backgroundTint="#66BB6A"
+                        android:backgroundTint="@color/colorGreen"
                         android:layout_weight="1"
                         android:textSize="18dp"
                         />
@@ -241,6 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="No slots available :("
+                    android:fontFamily="@font/roboto_condensed_regular"
                     android:textStyle="bold"
                     android:layout_marginTop="20dp"
                     android:textColor="@color/colorRed"
@@ -269,6 +277,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:text="Center"
+                            android:fontFamily="@font/roboto_condensed_regular"
                             android:textStyle="bold"
                             android:textSize="14dp"
                             />
@@ -277,6 +286,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.2"
                             android:text="Vaccine"
+                            android:fontFamily="@font/roboto_condensed_regular"
                             android:textStyle="bold"
                             android:textSize="14dp"
                             />
@@ -285,6 +295,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.2"
                             android:text="Date"
+                            android:fontFamily="@font/roboto_condensed_regular"
                             android:textStyle="bold"
                             android:textSize="14dp"
                             />
@@ -293,6 +304,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.2"
                             android:text="Availability"
+                            android:fontFamily="@font/roboto_condensed_regular"
                             android:textStyle="bold"
                             android:textSize="14dp"
                             />
@@ -336,6 +348,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:menu="@menu/drawer_menu"
         app:headerLayout="@layout/nav_header"
         android:background="@color/background_overlay"
         app:itemIconTint="@drawable/nav_drawer_tab_color"
@@ -349,6 +362,7 @@
             android:layout_marginBottom="10dp"
             android:textColor="@color/colorLightGrey"
             android:textSize="13dp"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:text="Developed with ❤ by Akshay Chavan"/>
 
     </com.google.android.material.navigation.NavigationView>

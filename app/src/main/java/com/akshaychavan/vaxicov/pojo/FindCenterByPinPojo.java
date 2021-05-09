@@ -1,4 +1,4 @@
-package pojo;
+package com.akshaychavan.vaxicov.pojo;
 
 /**
  * Created by Akshay Chavan on 06,May,2021

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Covid19 Vaccine Availability Checker</string>
+    <string name="app_name">vaxicov</string>
     <string name="navigation_drawer_open">Open Navigation Drawer</string>
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <string-array name="agegroups">

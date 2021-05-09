@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/vaccination_img"
+    tools:context=".LoginActivity">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="#DDFFFFFF"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vaxicov"
+                android:textColor="@color/colorOrange"
+                android:fontFamily="@font/quantico"
+                android:textSize="60dp"
+                android:layout_gravity="center"
+                />
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:visibility="visible"
+                android:drawableStart="@drawable/person_icon"
+                android:drawablePadding="12dp"
+                android:background="@drawable/custom_input_login"
+                android:ems="10"
+                android:textSize="18dp"
+                android:textColor="#919191"
+                android:hint="Name"
+                android:textColorHint="#919191"
+                />
+            <EditText
+                android:id="@+id/et_agegroup"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:drawableStart="@drawable/email_icon"
+                android:drawablePadding="12dp"
+                android:background="@drawable/custom_input_login"
+                android:ems="10"
+                android:textSize="18dp"
+                android:textColor="#919191"
+                android:hint="Email ID"
+                android:textColorHint="#919191"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/signin"
+                android:layout_width="200dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@color/colorOrange"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="Log In"
+                app:cornerRadius="8dp"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

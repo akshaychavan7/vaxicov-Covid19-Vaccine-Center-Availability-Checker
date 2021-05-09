@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/</item>
         <item>@font/advent_pro_medium</item>
         <item>@font/almendra</item>
+        <item>@font/black_ops_one</item>
+        <item>@font/orbitron</item>
+        <item>@font/orbitron_bold</item>
+        <item>@font/quantico</item>
         <item>@font/roboto_condensed_bold</item>
         <item>@font/roboto_condensed_light</item>
         <item>@font/roboto_condensed_regular</item>

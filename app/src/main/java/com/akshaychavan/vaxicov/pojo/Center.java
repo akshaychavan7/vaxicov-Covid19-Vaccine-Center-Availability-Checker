@@ -1,4 +1,4 @@
-package pojo;
+package com.akshaychavan.vaxicov.pojo;
 
 /**
  * Created by Akshay Chavan on 07,May,2021
@@ -51,7 +51,7 @@ public class Center {
     private String feeType;
     @SerializedName("sessions")
     @Expose
-    private List<SessionDistrict> sessions = null;
+    private List<Session> sessions = null;
 
     public Integer getCenterId() {
         return centerId;
@@ -149,11 +149,11 @@ public class Center {
         this.feeType = feeType;
     }
 
-    public List<SessionDistrict> getSessions() {
+    public List<Session> getSessions() {
         return sessions;
     }
 
-    public void setSessions(List<SessionDistrict> sessions) {
+    public void setSessions(List<Session> sessions) {
         this.sessions = sessions;
     }
 

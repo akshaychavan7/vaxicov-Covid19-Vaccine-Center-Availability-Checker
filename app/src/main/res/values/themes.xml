@@ -1,12 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Covid19VaccineAvailabilityChecker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.vaxicov" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <!--  font family      -->
-        <item name="fontFamily">@font/roboto_condensed_regular</item>
+<!--        <item name="fontFamily">@font/roboto_condensed_regular</item>-->
         <!--  for breadcrum icon       -->
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
 
@@ -14,6 +14,13 @@
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="android:textColor">@color/colorLightGrey</item>
 
+    </style>
+
+
+    <!--  for notification popup      -->
+    <style name="CustomDialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">

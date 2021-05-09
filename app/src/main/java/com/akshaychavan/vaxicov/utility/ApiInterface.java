@@ -1,4 +1,4 @@
-package com.akshaychavan.covid19vaccineavailabilitychecker.utility;
+package com.akshaychavan.vaxicov.utility;
 
 /**
  * Created by Akshay Chavan on 06,May,2021
@@ -6,12 +6,11 @@ package com.akshaychavan.covid19vaccineavailabilitychecker.utility;
  */
 
 
-import pojo.CalendarByDistrictPojo;
-import pojo.CalendarByPinPojo;
-import pojo.FindCenterByPinPojo;
-import pojo.GetDistrictsByStatesPojo;
+import com.akshaychavan.vaxicov.pojo.CalendarByDistrictPojo;
+import com.akshaychavan.vaxicov.pojo.CalendarByPinPojo;
+import com.akshaychavan.vaxicov.pojo.FindCenterByPinPojo;
+import com.akshaychavan.vaxicov.pojo.GetDistrictsByStatesPojo;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;

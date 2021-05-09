@@ -1,4 +1,4 @@
-package com.akshaychavan.covid19vaccineavailabilitychecker;
+package com.akshaychavan.vaxicov;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.akshaychavan.covid19vaccineavailabilitychecker", appContext.getPackageName());
+        assertEquals("com.akshaychavan.vaxicov", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package com.akshaychavan.covid19vaccineavailabilitychecker.utility;
+package com.akshaychavan.vaxicov.utility;
 
 /**
  * Created by Akshay Chavan on 06,May,2021

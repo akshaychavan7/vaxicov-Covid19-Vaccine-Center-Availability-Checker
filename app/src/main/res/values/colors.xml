@@ -12,6 +12,8 @@
     <color name="colorWhite">#FFF</color>
     <color name="colorBlack">#000</color>
     <color name="colorRed">#EF5350</color>
+    <color name="colorOrange">#FFA726</color>
+    <color name="colorGreen">#66BB6A</color>
     <color name="colorLightGrey">#DCDCDC</color>
     <color name="editTextBorder">#474747</color>
     <color name="colorTransparent">#00000000</color>

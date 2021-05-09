@@ -1,4 +1,4 @@
-package com.akshaychavan.covid19vaccineavailabilitychecker;
+package com.akshaychavan.vaxicov;
 
 import org.junit.Test;
 

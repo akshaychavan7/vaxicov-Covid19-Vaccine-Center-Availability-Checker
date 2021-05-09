@@ -1,22 +1,27 @@
-package com.akshaychavan.covid19vaccineavailabilitychecker;
+package com.akshaychavan.vaxicov;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -24,17 +29,24 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akshaychavan.covid19vaccineavailabilitychecker.utility.ApiClient;
-import com.akshaychavan.covid19vaccineavailabilitychecker.utility.ApiInterface;
+import com.akshaychavan.vaxicov.utility.ApiClient;
+import com.akshaychavan.vaxicov.utility.ApiInterface;
+import com.akshaychavan.vaxicov.utility.GlobalCode;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -47,24 +59,33 @@ import java.util.Locale;
 
 import Adapters.AvailabilityDetailsRowAdapter;
 import Adapters.AvailabilityDetailsRowDistrictAdapter;
-import pojo.CalendarByDistrictPojo;
-import pojo.CalendarByPinPojo;
-import pojo.Center;
-import pojo.CenterDistrict;
-import pojo.District;
-import pojo.FindCenterByPinPojo;
-import pojo.GetDistrictsByStatesPojo;
+import com.akshaychavan.vaxicov.pojo.CalendarByDistrictPojo;
+import com.akshaychavan.vaxicov.pojo.CalendarByPinPojo;
+import com.akshaychavan.vaxicov.pojo.Center;
+import com.akshaychavan.vaxicov.pojo.CenterDistrict;
+import com.akshaychavan.vaxicov.pojo.District;
+import com.akshaychavan.vaxicov.pojo.FindCenterByPinPojo;
+import com.akshaychavan.vaxicov.pojo.GetDistrictsByStatesPojo;
+import com.akshaychavan.vaxicov.pojo.Session;
+import com.akshaychavan.vaxicov.pojo.SessionDistrict;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
+    public final String NOTIFICATION_CHANNEL_ID = "Channel1";
     private final String TAG = "MainActivity";
+//    final static String KEY = "Availability Status", VALUE_DISTRICT = "Available at District", VALUE_PIN = "Available at area", VALUE_UNAVAILABLE = "None";
 
+
+    GlobalCode globalCode = GlobalCode.getInstance();
+    GoogleSignInAccount accountDetails;
     String findBy = "Pin";          // default -> pin, options-> pin OR district
     NavigationView navigationView;
     Toolbar toolbar;
+
+    AlertDialog notificationsPopup;
     String[] languages;
     ArrayAdapter dropdownArrayAdapter;
     AutoCompleteTextView agedropdownTextView;
@@ -74,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     LinearLayout detailsTable;
     MaterialButton btnSearch, btnNotify;
     ProgressBar progressBar;
-    TextView tvNoSlots, toolbarTitle;
+    TextView tvNoSlots, toolbarTitle, tvMadeBy, tvUsername, tvMail;
+    ImageView profileIcon;
     ArrayAdapter<String> statesAdapter, districtsAdapter;
     ArrayList<District> districtArrayList;
     ArrayList<String> districtsArray = new ArrayList<>();
@@ -84,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     RecyclerView availabilityDetailsRecylcer;
     RecyclerView.LayoutManager availabilityDetailsLayoutManager;
     RecyclerView.Adapter availabilityDetailsAdapter;
+    /////////////////////////////////
+
     Date c = Calendar.getInstance().getTime();
     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
     String today = df.format(c);
@@ -107,19 +131,41 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+
         bindVariables();
         bindEvents();
-        setNotifications();
+
+        accountDetails = globalCode.getAccountDetails();
+        // Setting user info in side panel
+        tvUsername.setText(accountDetails.getDisplayName());
+        tvMail.setText(accountDetails.getEmail());
+        Glide.with(this)
+                .load(accountDetails.getPhotoUrl())
+                .into(profileIcon);
+
+
     }
 
     public void bindVariables() {
 
+        tvMadeBy = findViewById(R.id.tv_madeby);
         toolbarTitle = findViewById(R.id.toolbar_title);
+
+        View sideNav = navigationView.getHeaderView(0);
+        tvUsername = sideNav.findViewById(R.id.tv_username);
+        tvMail = sideNav.findViewById(R.id.tv_user_mail);
+        profileIcon = sideNav.findViewById(R.id.iv_profile_icon);
 
         // setting toolbar title color gradient
         Paint paint = toolbarTitle.getPaint();
-        Shader textShader=new LinearGradient(0, 0, paint.measureText(toolbarTitle.getText().toString()), paint.getTextSize(),
-                new int[]{Color.parseColor("#FF6F00"),Color.WHITE, Color.parseColor("#1B5E20")},
+        Shader textShader = new LinearGradient(0, 0, paint.measureText(toolbarTitle.getText().toString()), paint.getTextSize(),
+                new int[]{Color.parseColor("#FF6F00"), Color.WHITE, Color.parseColor("#1B5E20")},
                 null, Shader.TileMode.CLAMP);
         toolbarTitle.getPaint().setShader(textShader);
         ///////////////////////////////////////
@@ -186,11 +232,21 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 //        for(String s: statesArray) {
 //            Log.e(TAG, s);
 //        }
-        statesAdapter  = new ArrayAdapter<String>(MainActivity.this, R.layout.dropdown_item, statesArray);
+        statesAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.dropdown_item, statesArray);
         etState.setAdapter(statesAdapter);
     }       // end bindVariables()
 
     public void bindEvents() {
+
+        tvMadeBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://www.linkedin.com/in/akshaychavan7/"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
         etAgeGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,6 +292,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
+        btnNotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "Lengths: " + etPin.getText().length() + " " + etState.getText().length() + " " + etDistrict.getText().length());
+                if (etPin.getText().length() > 0 && etState.getText().length() > 0 && etDistrict.getText().length() > 0) {
+                    openNotificationPopup();
+                } else {
+                    Toast.makeText(MainActivity.this, "Make sure you fill all the fields for both find by pin and find by district options to set notifications!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
         etState.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -252,35 +321,64 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.nv_logout:
+                        logout();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    break;
+                }
+
+                return true;
+            }
+        });
+
     }       // end bindEvents()
+
+
+//    public void sendNotification() {
+//
+//
+//        //Get an instance of NotificationManager//
+//
+//        NotificationCompat.Builder mBuilder =
+//                new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+//                        .setSmallIcon(R.mipmap.flag1)
+//                        .setContentTitle("My notification")
+//                        .setContentText("Hello World!")
+//                        .setAutoCancel(true);
+//
+//        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainActivity.this);
+//        managerCompat.notify(1, mBuilder.build());
+//
+//
+//    }
 
 
     public void setNotifications() {
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "ID")
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("textTitle")
-                .setContentText("textContent")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-// notificationId is a unique int for each notification that you must define
-        notificationManager.notify(100, builder.build());
         Calendar calendar = Calendar.getInstance();
 //        calendar.set(Calendar.HOUR_OF_DAY, 23);
 //        calendar.set(Calendar.MINUTE, 7);
 //        calendar.set(Calendar.SECOND, 0);
-
         Intent intent = new Intent(MainActivity.this, NotificationReceiver.class);
-//        intent.setAction("MY_NOTIFICATION_MESSAGE");
+
+
+        // find appointments
+        findCalendarByPin(Integer.parseInt(etPin.getText().toString()), today);
+        findCalendarByDistrict(selectedDistrictID, today);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000, pendingIntent);
+
+
     }
 
 
@@ -326,6 +424,42 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
 
+    public void openNotificationPopup() {
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
+        View view = li.inflate(R.layout.set_notifications_popup_layout, null);
+
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.CustomDialog);
+        alertDialogBuilder.setView(view);
+//        alertDialogBuilder.create();
+//        alertDialogBuilder.show();
+
+        notificationsPopup = alertDialogBuilder.create();
+        notificationsPopup.show();
+
+
+        // binding popup variables and events
+
+        Button set = view.findViewById(R.id.set);
+        Button cancel = view.findViewById(R.id.cancel);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notificationsPopup.dismiss();
+            }
+        });
+
+        set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setNotifications();
+                notificationsPopup.dismiss();
+                Toast.makeText(MainActivity.this, "Notifier set successfully!\nNow you can close the app but do not remove it from active processes.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
     public void findCenterByPin() {
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -336,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             public void onResponse(Call<FindCenterByPinPojo> call, Response<FindCenterByPinPojo> response) {
 //                    Log.e(TAG, "Response Code -> " + response.code());
                 if (response.isSuccessful()) {
-                    Log.e(TAG, "Success " + response.body().getSessions().get(0).getAddress());
+                    Log.e(TAG, "Success ");
                 } else {
                     Log.e(TAG, "URL>>" + response.raw().request().url());
                     Toast.makeText(MainActivity.this, "Response Error >> " + response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
@@ -370,15 +504,26 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             public void onResponse(Call<CalendarByPinPojo> call, Response<CalendarByPinPojo> response) {
 //                    Log.e(TAG, "Response Code -> " + response.code());
                 if (response.isSuccessful()) {
-                    Log.e(TAG, "URL>>" + response.raw().request().url());
+                    Log.e(TAG, "PIN URL>>" + response.raw().request().url());
 
                     progressBar.setVisibility(View.GONE);
 
                     ArrayList<Center> availabilityDetailsList = (ArrayList<Center>) response.body().getCenters();
 
+                    for (Center c : availabilityDetailsList) {
+                        for (Session s : c.getSessions()) {
+                            Log.e(TAG, "Cnt:" + s.getAvailableCapacity());
+                            if (s.getAvailableCapacity() > 0) {
+                                globalCode.setPin_availability(true);
+                                break;
+                            }
+                        }
+                    }
+
                     // check if slots are available or not
                     if (availabilityDetailsList.size() == 0)       // no slots available
                     {
+                        globalCode.setPin_availability(false);
                         tvNoSlots.setText("No slots available :(");
                         detailsTable.setVisibility(View.GONE);
                         tvNoSlots.setVisibility(View.VISIBLE);
@@ -432,15 +577,25 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             public void onResponse(Call<CalendarByDistrictPojo> call, Response<CalendarByDistrictPojo> response) {
 //                    Log.e(TAG, "Response Code -> " + response.code());
                 if (response.isSuccessful()) {
-                    Log.e(TAG, "URL>>" + response.raw().request().url());
+                    Log.e(TAG, "District URL>>" + response.raw().request().url());
 
                     progressBar.setVisibility(View.GONE);
 
                     ArrayList<CenterDistrict> availabilityDetailsList = (ArrayList<CenterDistrict>) response.body().getCenters();
 
+                    for (CenterDistrict c : availabilityDetailsList) {
+                        for (SessionDistrict s : c.getSessions()) {
+                            if (s.getAvailableCapacity() > 0) {
+                                globalCode.setDistrict_availability(true);
+                                break;
+                            }
+                        }
+                    }
+
                     // check if slots are available or not
                     if (availabilityDetailsList.size() == 0)       // no slots available
                     {
+                        globalCode.setDistrict_availability(false);
                         tvNoSlots.setText("No slots available :(");
                         detailsTable.setVisibility(View.GONE);
                         tvNoSlots.setVisibility(View.VISIBLE);
@@ -487,10 +642,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
 
                     // setting adapter for dropdown items
-                    for(District d: districtArrayList) {
+                    for (District d : districtArrayList) {
                         districtsArray.add(d.getDistrictName());
                     }
-                    districtsAdapter  = new ArrayAdapter<String>(MainActivity.this, R.layout.dropdown_item, districtsArray.toArray(new String[0]));
+                    districtsAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.dropdown_item, districtsArray.toArray(new String[0]));
                     etDistrict.setAdapter(districtsAdapter);
                 } else {
                     Log.e(TAG, "Failed URL>>" + response.raw().request().url());
@@ -512,12 +667,23 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     public int getDistrictID(String district) {
-        for(District d: districtArrayList) {
-            if(district.equalsIgnoreCase(d.getDistrictName())) {
+        for (District d : districtArrayList) {
+            if (district.equalsIgnoreCase(d.getDistrictName())) {
                 return d.getDistrictId();
             }
         }
         return -1;
     }
 
+
+    private void logout() {
+        GoogleSignInClient mGoogleSignInClient = globalCode.getGoogleSignInClient();
+
+        mGoogleSignInClient.signOut().addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(MainActivity.this, "You have successfully logged out!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

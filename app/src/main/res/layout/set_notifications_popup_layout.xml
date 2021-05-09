@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/background_overlay"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_gravity="center"
+        android:background="@color/background_overlay"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="10dp"
+        app:cardBackgroundColor="@color/background_overlay"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="top"
+            android:background="@drawable/notification_popup_top_color" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_overlay"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ABOUT NOTIFICATIONS"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                />
+
+            <ImageView
+                android:id="@+id/hr"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/editTextBorder"
+                android:gravity="center_horizontal"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:text="In order to keep notifier active you'll need to keep app running in background. Thus, make sure that you do not remove app from background processes!"
+                android:elevation="3dp"
+                android:orientation="horizontal"
+                android:padding="7dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/set"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:backgroundTint="@color/colorGreen"
+                    android:text="Set"
+                    android:layout_margin="5dp"
+                    />
+
+                <Button
+                    android:id="@+id/cancel"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:backgroundTint="@color/colorGreen"
+                    android:text="Cancel"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+<!--        <TextView-->
+<!--            android:id="@+id/tv_add_cards_btn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:text="ADD CARDS"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            android:gravity="center"-->
+<!--            android:textSize="16dp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:background="#F3F3F3"-->
+<!--            android:clickable="true"-->
+<!--            android:foreground="?android:attr/selectableItemBackground"-->
+<!--            />-->
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

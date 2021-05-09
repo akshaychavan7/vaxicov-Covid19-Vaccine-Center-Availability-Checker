@@ -7,53 +7,45 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akshaychavan.vaxicov.R;
 
 import java.util.ArrayList;
 
-import com.akshaychavan.vaxicov.pojo.CenterDistrict;
 import com.akshaychavan.vaxicov.pojo.SessionDistrict;
 
 /**
  * Created by Akshay Chavan on 09,May,2021
  * akshaychavan.kkwedu@gmail.com
  */
-public class AvailabilityDetailsRowDistrictAdapter extends RecyclerView.Adapter<AvailabilityDetailsRowDistrictAdapter.DetailsViewHolder> {
+public class SubrowsDistrictAdapter extends RecyclerView.Adapter<SubrowsDistrictAdapter.DetailsViewHolder> {
 
     final String TAG = "AvailabilityDetailsRowAdapter";
-    private ArrayList<CenterDistrict> mDetailsList;
+    private ArrayList<SessionDistrict> mDetailsList;
     private Context mContext;
 
-    public AvailabilityDetailsRowDistrictAdapter(ArrayList<CenterDistrict> detailsList, Context context) {
+    public SubrowsDistrictAdapter(ArrayList<SessionDistrict> detailsList, Context context) {
         mDetailsList = detailsList;
         this.mContext = context;
     }
-    
+
 
     @NonNull
     @Override
     public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.details_row, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.details_subrows, parent, false);
         DetailsViewHolder holdingsViewHolder = new DetailsViewHolder(v, mContext);
         return holdingsViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull DetailsViewHolder holder, int position) {
-        CenterDistrict currentItem = mDetailsList.get(position);
+        SessionDistrict currentItem = mDetailsList.get(position);
 
-        holder.tvCenterName.setText(currentItem.getName());
-        holder.tvFeeType.setText(currentItem.getFeeType());
-
-        ArrayList<SessionDistrict> sessionArrayList = (ArrayList<SessionDistrict>) currentItem.getSessions();
-
-        // Passing data to Adapter
-        holder.sessionsAdapter = new SubrowsDistrictAdapter(sessionArrayList, mContext);
-        holder.sessionsRecylcer.setLayoutManager(holder.sessionsLayoutManager);
-        holder.sessionsRecylcer.setAdapter(holder.sessionsAdapter);
+        holder.tvVaccineName.setText(currentItem.getVaccine());
+        holder.tvDate.setText(currentItem.getDate());
+        holder.tvCount.setText(currentItem.getAvailableCapacity().toString());
 
     }
 
@@ -64,7 +56,7 @@ public class AvailabilityDetailsRowDistrictAdapter extends RecyclerView.Adapter<
 
 
     public static class DetailsViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCenterName, tvFeeType;
+        TextView tvCenterName, tvVaccineName, tvDate, tvCount, tvFeeType;
         // Availability Details Adapter
         RecyclerView sessionsRecylcer;
         RecyclerView.LayoutManager sessionsLayoutManager;
@@ -74,14 +66,9 @@ public class AvailabilityDetailsRowDistrictAdapter extends RecyclerView.Adapter<
         public DetailsViewHolder(@NonNull View itemView, Context mContext) {
             super(itemView);
 
-            tvCenterName = itemView.findViewById(R.id.tv_center_name);
-            tvFeeType = itemView.findViewById(R.id.tv_fee_type);
-
-            // Setting up adapters
-            sessionsRecylcer = itemView.findViewById(R.id.rv_subrows);
-            sessionsRecylcer.setHasFixedSize(true);
-            sessionsLayoutManager = new LinearLayoutManager(mContext);
-
+            tvVaccineName = itemView.findViewById(R.id.tv_vaccine_name);
+            tvDate = itemView.findViewById(R.id.tv_date);
+            tvCount = itemView.findViewById(R.id.tv_count);
         }
     }
 }

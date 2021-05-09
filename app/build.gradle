@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.akshaychavan.covid19vaccineavailabilitychecker"
+        applicationId "com.akshaychavan.vaxicov"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -28,6 +28,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -37,6 +38,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    //noinspection GradleCompatible
     implementation "com.android.support:support-compat:28.0.0"
 
 
@@ -44,6 +46,26 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+
+    // Google Account Login
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+
+    implementation 'pub.devrel:easypermissions:0.3.0'
+
+    // Google API Client Library for Java
+    implementation('com.google.api-client:google-api-client-android:1.23.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
+
+    implementation('com.google.apis:google-api-services-sheets:v4-rev581-1.25.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
+
+    // Glide for setting image using URL
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
 
 
 }
