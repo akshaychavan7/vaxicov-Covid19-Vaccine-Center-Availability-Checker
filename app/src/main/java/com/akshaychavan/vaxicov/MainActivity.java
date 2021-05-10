@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     LinearLayout detailsTable;
     MaterialButton btnSearch, btnNotify;
     ProgressBar progressBar;
-    TextView tvNoSlots, toolbarTitle, tvMadeBy, tvUsername, tvMail;
+    TextView tvNoSlots, toolbarTitle, tvMadeBy, tvUsername, tvMail, usersCount, navHeaderTitle;
     ImageView profileIcon;
     ArrayAdapter<String> statesAdapter, districtsAdapter;
     ArrayList<District> districtArrayList;
@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Setting user info in side panel
         tvUsername.setText(accountDetails.getDisplayName());
         tvMail.setText(accountDetails.getEmail());
+        usersCount.setText("Total User: "+globalCode.getUsersCount());
         Glide.with(this)
                 .load(accountDetails.getPhotoUrl())
                 .into(profileIcon);
@@ -161,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         tvUsername = sideNav.findViewById(R.id.tv_username);
         tvMail = sideNav.findViewById(R.id.tv_user_mail);
         profileIcon = sideNav.findViewById(R.id.iv_profile_icon);
+        navHeaderTitle = sideNav.findViewById(R.id.navheader_title);
+        usersCount = navigationView.findViewById(R.id.tv_users_count);
 
         // setting toolbar title color gradient
         Paint paint = toolbarTitle.getPaint();
@@ -168,6 +171,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 new int[]{Color.parseColor("#FF6F00"), Color.WHITE, Color.parseColor("#1B5E20")},
                 null, Shader.TileMode.CLAMP);
         toolbarTitle.getPaint().setShader(textShader);
+
+        // also for side nav title
+        Paint paint2 = navHeaderTitle.getPaint();
+        Shader textShader2 = new LinearGradient(0, 0, paint2.measureText(navHeaderTitle.getText().toString()), paint2.getTextSize(),
+                new int[]{Color.parseColor("#FF6F00"), Color.WHITE, Color.parseColor("#1B5E20")},
+                null, Shader.TileMode.CLAMP);
+        navHeaderTitle.getPaint().setShader(textShader2);
         ///////////////////////////////////////
 
         detailsTable = findViewById(R.id.ll_details_table);
@@ -660,7 +670,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
     }
-
 
     public int getStateID(String state) {
         return states.get(state);

@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 public class GlobalCode {
 
     private static GlobalCode mInstance = null;
+    int usersCount;
     GoogleSignInAccount accountDetails;
     GoogleSignInClient googleSignInClient;
     boolean pin_availability = false, district_availability = false;
@@ -57,5 +58,13 @@ public class GlobalCode {
 
     public void setGoogleSignInClient(GoogleSignInClient googleSignInClient) {
         this.googleSignInClient = googleSignInClient;
+    }
+
+    public int getUsersCount() {
+        return usersCount;
+    }
+
+    public void setUsersCount(int usersCount) {
+        this.usersCount = usersCount;
     }
 }

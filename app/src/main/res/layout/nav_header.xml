@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="206dp"
-    android:background="@mipmap/abstract_background"
+    android:background="@mipmap/bg1"
     android:gravity="bottom"
     android:orientation="vertical"
     android:theme="@style/Theme.AppCompat.Light">
@@ -16,48 +16,31 @@
         android:paddingTop="2dp"
         android:paddingRight="10dp">
 
-                <ImageView
-                    android:id="@+id/iv_app_logo"
-                    android:layout_width="250dp"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/cowinlogo" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/iv_app_logo"-->
+<!--                    android:layout_width="250dp"-->
+<!--                    android:layout_height="100dp"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:src="@mipmap/cowinlogo" />-->
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal">-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Flash"-->
-<!--                android:textStyle="italic"-->
-<!--                android:fontFamily="monospace"-->
-<!--                android:textColor="@color/colorWhite"-->
-<!--                android:textSize="60dp" />-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="X"-->
-<!--                android:textColor="#F44336"-->
-<!--                android:textSize="75dp" />-->
-<!--        </LinearLayout>-->
+       <TextView
+           android:id="@+id/navheader_title"
+           android:layout_width="250dp"
+           android:layout_height="100dp"
+           android:layout_marginTop="10dp"
+           android:layout_gravity="center"
+           android:text="vaxicov"
+           android:fontFamily="@font/quantico"
+           android:textColor="@color/colorOrange"
+           android:textSize="70dp"
+           />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Let us find the vaccine centers for you!"
-            android:textStyle="italic"
-            android:textColor="@color/colorWhite"
-            android:textSize="12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal"
             android:weightSum="1">
 
@@ -65,7 +48,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardBackgroundColor="@color/colorOrange"
                 app:cardCornerRadius="50dp"
                 android:layout_weight="0.2"
                 >

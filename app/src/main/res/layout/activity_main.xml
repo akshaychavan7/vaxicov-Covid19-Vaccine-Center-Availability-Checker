@@ -350,10 +350,20 @@
         android:layout_gravity="start"
         app:menu="@menu/drawer_menu"
         app:headerLayout="@layout/nav_header"
-        android:background="@color/background_overlay"
+        android:background="@color/background_main"
         app:itemIconTint="@drawable/nav_drawer_tab_color"
         app:itemTextColor="@drawable/nav_drawer_tab_color"
         >
+        <TextView
+            android:id="@+id/tv_users_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="40dp"
+            android:textColor="@color/colorLightGrey"
+            android:textSize="18dp"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="Total Users: 10"/>
         <TextView
             android:id="@+id/tv_madeby"
             android:layout_width="wrap_content"
@@ -363,7 +373,7 @@
             android:textColor="@color/colorLightGrey"
             android:textSize="13dp"
             android:fontFamily="@font/roboto_condensed_regular"
-            android:text="Developed with ❤ by Akshay Chavan"/>
+            android:text="Developed with ❤ by Akshay &amp; Jayesh"/>
 
     </com.google.android.material.navigation.NavigationView>
 

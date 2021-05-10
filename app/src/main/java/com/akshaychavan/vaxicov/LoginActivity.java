@@ -1,37 +1,58 @@
 package com.akshaychavan.vaxicov;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.akshaychavan.vaxicov.pojo.District;
+import com.akshaychavan.vaxicov.pojo.GetDistrictsByStatesPojo;
+import com.akshaychavan.vaxicov.pojo.VisitingCounterPojo;
+import com.akshaychavan.vaxicov.utility.ApiClient;
+import com.akshaychavan.vaxicov.utility.ApiInterface;
 import com.akshaychavan.vaxicov.utility.GlobalCode;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 0;
+    final String KEY_ACTION = "action", KEY_NAME = "name", KEY_EMAIL = "email", KEY_IMAGE_URL = "photourl",
+            ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbxXciGHP1u07wsvfOuPVQfZDbeqsd0gMO6wS2WeyxZkWyQCEGe8yK1qyokQ-_Lqn1ab/exec";
     private final String TAG = "LoginActivity";
     GoogleSignInClient mGoogleSignInClient;
+    GoogleSignInAccount acct;
+    String personName, personGivenName, personFamilyName, personEmail, personId;
+    Uri personPhoto;
 
     MaterialButton signinButton;
     TextView titleText;
@@ -54,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.e(TAG, "onActivityResult>>" + requestCode);
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach
@@ -82,6 +104,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Configure sign-in to request the user's ID, email address, and basic
                 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+
+
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
                         .build();
@@ -92,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                 GlobalCode.getInstance().setGoogleSignInClient(mGoogleSignInClient);
 
                 signIn();
+
             }
         });
     }
@@ -99,11 +124,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        Log.e(TAG, "Starting  startActivityForResult");
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        acct = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
@@ -122,15 +149,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void getUserAccountInfo() {
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
 
+        if (acct != null) {
+            if (personEmail == null || !personEmail.equalsIgnoreCase(acct.getEmail())) {
+                personName = acct.getDisplayName();
+                personGivenName = acct.getGivenName();
+                personFamilyName = acct.getFamilyName();
+                personEmail = acct.getEmail();
+                personId = acct.getId();
+                personPhoto = acct.getPhotoUrl();
+                addRecordToSheet();
+                getUsersCount();
+            }
 
             GlobalCode.getInstance().setAccountDetails(acct);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -142,8 +172,87 @@ public class LoginActivity extends AppCompatActivity {
 //            Glide.with(this)
 //                    .load(personPhoto)
 //                    .into(ivProfileIcon);
-
+        } else {
+            Log.e(TAG, "else");
         }
+    }
+
+
+    private void addRecordToSheet() {
+        final ProgressDialog loading = ProgressDialog.show(this, "Signing in...", "Please wait...", false, false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ADD_RECORD_TO_SHEET_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        loading.dismiss();
+                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Response>>" + response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Error>> " + error.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(KEY_ACTION, "addItem");
+                params.put(KEY_NAME, personName);
+                params.put(KEY_EMAIL, personEmail);
+
+                Log.e(TAG, "photourl:" + "" + personPhoto.toString());
+                params.put(KEY_IMAGE_URL, "" + personPhoto.toString());
+
+                return params;
+            }
+
+        };
+
+        int socketTimeout = 30000; // 30 seconds. You can change it
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+
+        stringRequest.setRetryPolicy(policy);
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        requestQueue.add(stringRequest);
+
+    }
+
+
+    public void getUsersCount() {
+        ApiInterface apiInterface = ApiClient.getClientCounter().create(ApiInterface.class);
+
+//        Log.e(TAG, ApiClient.getClient().baseUrl().toString());
+
+        Call<VisitingCounterPojo> call = apiInterface.getUsersCount();
+
+
+        call.enqueue(new Callback<VisitingCounterPojo>() {
+            @Override
+            public void onResponse(Call<VisitingCounterPojo> call, retrofit2.Response<VisitingCounterPojo> response) {
+//                    Log.e(TAG, "Response Code -> " + response.code());
+                if (response.isSuccessful()) {
+                    GlobalCode.getInstance().setUsersCount(response.body().getValue());
+                } else {
+                    Log.e(TAG, "Failed URL>>" + response.raw().request().url());
+//                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VisitingCounterPojo> call, Throwable t) {
+//                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Something went wrong >>" + t.getMessage());
+            }
+        });
     }
 
 }

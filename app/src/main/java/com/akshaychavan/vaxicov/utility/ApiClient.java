@@ -20,7 +20,9 @@ public class ApiClient {
 
 
     private static final String BASE_URL = "https://cdn-api.co-vin.in/api/v2/";
+    private static final String BASE_URL2 = "https://api.countapi.xyz/hit/";
     private static Retrofit retrofit = null;
+    private static Retrofit retrofit2 = null;
 
     // for BASE_URL
     public static Retrofit getClient() {
@@ -47,6 +49,32 @@ public class ApiClient {
                     .build();
         }
         return retrofit;
+    }
+
+    public static Retrofit getClientCounter() {
+
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .readTimeout(60000, TimeUnit.MILLISECONDS)
+                .connectTimeout(60000, TimeUnit.MILLISECONDS)
+                .build();
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .serializeNulls()
+                .create();
+
+        if (retrofit2 == null) {
+            retrofit2 = new Retrofit.Builder()
+                    .baseUrl(BASE_URL2)
+                    .client(okHttpClient)
+                    //  .client(getUnsafeOkHttpClient().build())                // to handle security certificates issue
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
+                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().serializeNulls().create()))
+                    .build();
+        }
+        return retrofit2;
     }
 
 }

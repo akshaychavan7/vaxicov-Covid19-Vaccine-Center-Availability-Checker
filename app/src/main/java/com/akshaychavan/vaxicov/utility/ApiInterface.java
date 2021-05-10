@@ -10,6 +10,8 @@ import com.akshaychavan.vaxicov.pojo.CalendarByDistrictPojo;
 import com.akshaychavan.vaxicov.pojo.CalendarByPinPojo;
 import com.akshaychavan.vaxicov.pojo.FindCenterByPinPojo;
 import com.akshaychavan.vaxicov.pojo.GetDistrictsByStatesPojo;
+import com.akshaychavan.vaxicov.pojo.VisitingCounterPojo;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -35,4 +37,9 @@ public interface ApiInterface {
     @Headers("user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
     @GET("admin/location/districts/{state_id}")
     Call<GetDistrictsByStatesPojo> getDistrictsByState(@Path("state_id") int state_id);
+
+    @Headers("user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+    @GET("vaxicovtest")
+    Call<VisitingCounterPojo> getUsersCount();
+
 }
