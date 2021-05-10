@@ -483,13 +483,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     Log.e(TAG, "Success ");
                 } else {
                     Log.e(TAG, "URL>>" + response.raw().request().url());
-                    Toast.makeText(MainActivity.this, "Response Error >> " + response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Response Error >> " + response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FindCenterByPinPojo> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Something went wrong >>" + t.getMessage());
             }
         });
@@ -626,7 +626,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
             @Override
             public void onFailure(Call<CalendarByDistrictPojo> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Something went wrong >>" + t.getMessage());
             }
         });

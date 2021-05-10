@@ -186,14 +186,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         loading.dismiss();
-                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Response>>" + response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Error>> " + error.getMessage());
                     }
                 }) {
