@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 0;
     final String KEY_ACTION = "action", KEY_NAME = "name", KEY_EMAIL = "email", KEY_IMAGE_URL = "photourl",
-            ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbxXciGHP1u07wsvfOuPVQfZDbeqsd0gMO6wS2WeyxZkWyQCEGe8yK1qyokQ-_Lqn1ab/exec";
+            ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbwuso3FoCOpCBhTLcqzApL7DzsigI95VbsBrc99gF08vigewxVi_x2rVAFFOBTzSJ_A/exec";
     private final String TAG = "LoginActivity";
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount acct;
@@ -204,9 +204,12 @@ public class LoginActivity extends AppCompatActivity {
                 params.put(KEY_NAME, personName);
                 params.put(KEY_EMAIL, personEmail);
 
-                Log.e(TAG, "photourl:" + "" + personPhoto.toString());
-                params.put(KEY_IMAGE_URL, "" + personPhoto.toString());
-
+                if(personPhoto!=null) {
+                    Log.e(TAG, "photourl:" + "" + personPhoto.toString());
+                    params.put(KEY_IMAGE_URL, "" + personPhoto.toString());
+                } else {
+                    params.put(KEY_IMAGE_URL, "No Image");
+                }
                 return params;
             }
 
@@ -223,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         requestQueue.add(stringRequest);
+
 
     }
 
