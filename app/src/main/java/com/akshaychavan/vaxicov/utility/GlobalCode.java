@@ -1,5 +1,7 @@
 package com.akshaychavan.vaxicov.utility;
 
+import android.widget.TextView;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
@@ -13,6 +15,7 @@ public class GlobalCode {
     int usersCount;
     GoogleSignInAccount accountDetails;
     GoogleSignInClient googleSignInClient;
+    TextView tvUsersCount;
     boolean pin_availability = false, district_availability = false;
 //    int pin;
 //    String state, district;
@@ -66,5 +69,13 @@ public class GlobalCode {
 
     public void setUsersCount(int usersCount) {
         this.usersCount = usersCount;
+    }
+
+    public TextView getTvUsersCount() {
+        return tvUsersCount;
+    }
+
+    public void setTvUsersCount(TextView tvUsersCount) {
+        this.tvUsersCount = tvUsersCount;
     }
 }

@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Setting user info in side panel
         tvUsername.setText(accountDetails.getDisplayName());
         tvMail.setText(accountDetails.getEmail());
-        usersCount.setText("Total User: "+globalCode.getUsersCount());
+        usersCount.setText("Total Users: "+globalCode.getUsersCount());
         Glide.with(this)
                 .load(accountDetails.getPhotoUrl())
                 .into(profileIcon);
@@ -164,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         profileIcon = sideNav.findViewById(R.id.iv_profile_icon);
         navHeaderTitle = sideNav.findViewById(R.id.navheader_title);
         usersCount = navigationView.findViewById(R.id.tv_users_count);
+
+        globalCode.setTvUsersCount(usersCount);
 
         // setting toolbar title color gradient
         Paint paint = toolbarTitle.getPaint();

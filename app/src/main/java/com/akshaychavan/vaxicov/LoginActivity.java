@@ -1,6 +1,5 @@
 package com.akshaychavan.vaxicov;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,17 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.akshaychavan.vaxicov.pojo.District;
-import com.akshaychavan.vaxicov.pojo.GetDistrictsByStatesPojo;
-import com.akshaychavan.vaxicov.pojo.VisitingCounterPojo;
-import com.akshaychavan.vaxicov.utility.ApiClient;
-import com.akshaychavan.vaxicov.utility.ApiInterface;
 import com.akshaychavan.vaxicov.utility.GlobalCode;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -36,18 +28,14 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 0;
     final String KEY_ACTION = "action", KEY_NAME = "name", KEY_EMAIL = "email", KEY_IMAGE_URL = "photourl",
-            ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbwuso3FoCOpCBhTLcqzApL7DzsigI95VbsBrc99gF08vigewxVi_x2rVAFFOBTzSJ_A/exec";
+            ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbxUZPIwV3QjQ078UKHDuQ0TD3Ww0dq_O87Pg7iRZeE79REAf5gSc-ZGwPXs7w-MYpBx/exec";
     private final String TAG = "LoginActivity";
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount acct;
@@ -105,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Configure sign-in to request the user's ID, email address, and basic
                 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
 
-
+//                getUsersCount();
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
                         .build();
@@ -151,16 +139,15 @@ public class LoginActivity extends AppCompatActivity {
     public void getUserAccountInfo() {
 
         if (acct != null) {
-            if (personEmail == null || !personEmail.equalsIgnoreCase(acct.getEmail())) {
-                personName = acct.getDisplayName();
-                personGivenName = acct.getGivenName();
-                personFamilyName = acct.getFamilyName();
-                personEmail = acct.getEmail();
-                personId = acct.getId();
-                personPhoto = acct.getPhotoUrl();
-                addRecordToSheet();
-                getUsersCount();
-            }
+//            if (personEmail == null || !personEmail.equalsIgnoreCase(acct.getEmail())) {
+            personName = acct.getDisplayName();
+            personGivenName = acct.getGivenName();
+            personFamilyName = acct.getFamilyName();
+            personEmail = acct.getEmail();
+            personId = acct.getId();
+            personPhoto = acct.getPhotoUrl();
+//            }
+            addRecordToSheet();
 
             GlobalCode.getInstance().setAccountDetails(acct);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -179,14 +166,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void addRecordToSheet() {
-        final ProgressDialog loading = ProgressDialog.show(this, "Signing in...", "Please wait...", false, false);
+//        final ProgressDialog loading = ProgressDialog.show(this, "Signing in...", "Please wait...", false, false);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ADD_RECORD_TO_SHEET_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        loading.dismiss();
+//                        loading.dismiss();
 //                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
+                        GlobalCode.getInstance().setUsersCount(Integer.parseInt(response));
+                        GlobalCode.getInstance().getTvUsersCount().setText("Users count: "+response);
                         Log.e(TAG, "Response>>" + response);
                     }
                 },
@@ -204,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
                 params.put(KEY_NAME, personName);
                 params.put(KEY_EMAIL, personEmail);
 
-                if(personPhoto!=null) {
+                if (personPhoto != null) {
                     Log.e(TAG, "photourl:" + "" + personPhoto.toString());
                     params.put(KEY_IMAGE_URL, "" + personPhoto.toString());
                 } else {
@@ -231,32 +220,32 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void getUsersCount() {
-        ApiInterface apiInterface = ApiClient.getClientCounter().create(ApiInterface.class);
-
-//        Log.e(TAG, ApiClient.getClient().baseUrl().toString());
-
-        Call<VisitingCounterPojo> call = apiInterface.getUsersCount();
-
-
-        call.enqueue(new Callback<VisitingCounterPojo>() {
-            @Override
-            public void onResponse(Call<VisitingCounterPojo> call, retrofit2.Response<VisitingCounterPojo> response) {
-//                    Log.e(TAG, "Response Code -> " + response.code());
-                if (response.isSuccessful()) {
-                    GlobalCode.getInstance().setUsersCount(response.body().getValue());
-                } else {
-                    Log.e(TAG, "Failed URL>>" + response.raw().request().url());
-//                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<VisitingCounterPojo> call, Throwable t) {
-//                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Something went wrong >>" + t.getMessage());
-            }
-        });
-    }
+//    public void getUsersCount() {
+//        ApiInterface apiInterface = ApiClient.getClientCounter().create(ApiInterface.class);
+//
+////        Log.e(TAG, ApiClient.getClient().baseUrl().toString());
+//
+//        Call<VisitingCounterPojo> call = apiInterface.getUsersCount();
+//
+//
+//        call.enqueue(new Callback<VisitingCounterPojo>() {
+//            @Override
+//            public void onResponse(Call<VisitingCounterPojo> call, retrofit2.Response<VisitingCounterPojo> response) {
+////                    Log.e(TAG, "Response Code -> " + response.code());
+//                if (response.isSuccessful()) {
+//                    GlobalCode.getInstance().setUsersCount(response.body().getValue());
+//                } else {
+//                    Log.e(TAG, "Failed URL>>" + response.raw().request().url());
+////                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<VisitingCounterPojo> call, Throwable t) {
+////                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Log.e(TAG, "Something went wrong >>" + t.getMessage());
+//            }
+//        });
+//    }
 
 }
