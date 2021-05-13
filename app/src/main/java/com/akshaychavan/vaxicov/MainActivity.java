@@ -34,11 +34,22 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akshaychavan.vaxicov.pojo.CalendarByDistrictPojo;
+import com.akshaychavan.vaxicov.pojo.CalendarByPinPojo;
+import com.akshaychavan.vaxicov.pojo.Center;
+import com.akshaychavan.vaxicov.pojo.CenterDistrict;
+import com.akshaychavan.vaxicov.pojo.District;
+import com.akshaychavan.vaxicov.pojo.FindCenterByPinPojo;
+import com.akshaychavan.vaxicov.pojo.GetDistrictsByStatesPojo;
+import com.akshaychavan.vaxicov.pojo.Session;
+import com.akshaychavan.vaxicov.pojo.SessionDistrict;
+import com.akshaychavan.vaxicov.pojo.SetNotificationsResponsePojo;
+import com.akshaychavan.vaxicov.pojo.UserLoginResponsePojo;
+import com.akshaychavan.vaxicov.pojo.UserRegistrationResponsePojo;
 import com.akshaychavan.vaxicov.utility.ApiClient;
 import com.akshaychavan.vaxicov.utility.ApiInterface;
 import com.akshaychavan.vaxicov.utility.GlobalCode;
@@ -49,7 +60,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,15 +76,6 @@ import java.util.Locale;
 
 import Adapters.AvailabilityDetailsRowAdapter;
 import Adapters.AvailabilityDetailsRowDistrictAdapter;
-import com.akshaychavan.vaxicov.pojo.CalendarByDistrictPojo;
-import com.akshaychavan.vaxicov.pojo.CalendarByPinPojo;
-import com.akshaychavan.vaxicov.pojo.Center;
-import com.akshaychavan.vaxicov.pojo.CenterDistrict;
-import com.akshaychavan.vaxicov.pojo.District;
-import com.akshaychavan.vaxicov.pojo.FindCenterByPinPojo;
-import com.akshaychavan.vaxicov.pojo.GetDistrictsByStatesPojo;
-import com.akshaychavan.vaxicov.pojo.Session;
-import com.akshaychavan.vaxicov.pojo.SessionDistrict;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public final String NOTIFICATION_CHANNEL_ID = "Channel1";
     private final String TAG = "MainActivity";
 //    final static String KEY = "Availability Status", VALUE_DISTRICT = "Available at District", VALUE_PIN = "Available at area", VALUE_UNAVAILABLE = "None";
-
+    public String userID = null, token = null;
 
     GlobalCode globalCode = GlobalCode.getInstance();
     GoogleSignInAccount accountDetails;
@@ -145,11 +153,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Setting user info in side panel
         tvUsername.setText(accountDetails.getDisplayName());
         tvMail.setText(accountDetails.getEmail());
-        usersCount.setText("Total Users: "+globalCode.getUsersCount());
+        usersCount.setText("Total Users: " + globalCode.getUsersCount());
         Glide.with(this)
                 .load(accountDetails.getPhotoUrl())
                 .into(profileIcon);
 
+//        registerUser();
+//        loginUser();
 
     }
 
@@ -343,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         logout();
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent);
-                    break;
+                        break;
                 }
 
                 return true;
@@ -389,8 +399,168 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000, pendingIntent);
+    }
 
 
+    public void setEmailNotifications() {
+
+//        {
+//            "pincode": "422011",
+//                "minAgeLimit": 0,
+//                "price": "Any",
+//                "vaccine": "Any",
+//                "center": 0
+//        }
+
+        JSONObject emailNotificationObj = new JSONObject();
+
+        try {
+            emailNotificationObj.put("pincode", etPin.getText());
+            emailNotificationObj.put("minAgeLimit", 0);
+            emailNotificationObj.put("price", "Any");
+            emailNotificationObj.put("vaccine", "Any");
+            emailNotificationObj.put("center", 0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        ApiInterface apiInterface = ApiClient.getNotificationClient().create(ApiInterface.class);
+
+        Log.e(TAG, "Email Notifications Params>>"+ emailNotificationObj.toString());
+
+        Call<SetNotificationsResponsePojo> call = apiInterface.setNotifications(userID, emailNotificationObj.toString(), token);
+
+
+        call.enqueue(new Callback<SetNotificationsResponsePojo>() {
+            @Override
+            public void onResponse(Call<SetNotificationsResponsePojo> call, Response<SetNotificationsResponsePojo> response) {
+//                    Log.e(TAG, "Response Code -> " + response.code());
+                if (response.isSuccessful()) {
+                    if(response.body().getActive().toString().length()!=0) {
+                        Toast.makeText(MainActivity.this, "Email notifications set successfully!\nYou will get notifications over mail when slots become available.", Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    Log.e(TAG, response.code()+" Error>>" + response.message()+ "\nURL>>" + response.raw().request().url());
+//                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SetNotificationsResponsePojo> call, Throwable t) {
+                // using no slots textview to display error message
+//                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Something went wrong >>" + t.getMessage());
+            }
+        });
+    }
+
+    public void registerUser() {
+
+//        {
+//            "fullName": "xyx xxx",
+//                "username": "xyx",
+//                "email": "xyx@gmail.com",
+//                "password": "xyzxyz"
+//        }
+        GoogleSignInAccount accountDetails = globalCode.getAccountDetails();
+
+        JSONObject registerUserObj = new JSONObject();
+
+        try {
+            registerUserObj.put("fullName", accountDetails.getDisplayName());
+            registerUserObj.put("username", accountDetails.getEmail());
+            registerUserObj.put("email", accountDetails.getEmail());
+            registerUserObj.put("password", accountDetails.getEmail());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        ApiInterface apiInterface = ApiClient.getNotificationClient().create(ApiInterface.class);
+
+        Log.e(TAG, "Register Params>>"+ registerUserObj.toString());
+
+        Call<UserRegistrationResponsePojo> call = apiInterface.registerUser(registerUserObj.toString());
+
+
+        call.enqueue(new Callback<UserRegistrationResponsePojo>() {
+            @Override
+            public void onResponse(Call<UserRegistrationResponsePojo> call, Response<UserRegistrationResponsePojo> response) {
+//                    Log.e(TAG, "Response Code -> " + response.code());
+                if (response.isSuccessful()) {
+                    Log.e(TAG, "Register User>> " + response.body().getMessage());
+
+                } else {
+                    Log.e(TAG, response.code()+" Error>>" + response.message()+ "\nURL>>" + response.raw().request().url());
+//                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+
+                loginUser();        // if response then login
+            }
+
+            @Override
+            public void onFailure(Call<UserRegistrationResponsePojo> call, Throwable t) {
+                // using no slots textview to display error message
+//                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Something went wrong >>" + t.getMessage());
+
+                loginUser();        // if no response then also login
+            }
+        });
+    }
+
+
+
+    public void loginUser() {
+
+//        {
+//            "username": "abc",
+//                "password": "9822479700"
+//        }
+        GoogleSignInAccount accountDetails = globalCode.getAccountDetails();
+
+        JSONObject loginUserObj = new JSONObject();
+
+        try {
+            loginUserObj.put("username", accountDetails.getEmail());
+            loginUserObj.put("password", accountDetails.getEmail());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        ApiInterface apiInterface = ApiClient.getNotificationClient().create(ApiInterface.class);
+
+        Log.e(TAG, "Login Params>>"+ loginUserObj.toString());
+
+        Call<UserLoginResponsePojo> call = apiInterface.loginUser(loginUserObj.toString());
+
+
+        call.enqueue(new Callback<UserLoginResponsePojo>() {
+            @Override
+            public void onResponse(Call<UserLoginResponsePojo> call, Response<UserLoginResponsePojo> response) {
+//                    Log.e(TAG, "Response Code -> " + response.code());
+                if (response.isSuccessful()) {
+                    Log.e(TAG, "Login User>> " + response.body().getId());
+                    userID = response.body().getId();
+                    token = "Bearer "+response.body().getToken();
+
+                    setEmailNotifications();
+                } else {
+                    Log.e(TAG, response.code()+" Error>>" + response.body() + "\nURL>>" + response.raw().request().url());
+//                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserLoginResponsePojo> call, Throwable t) {
+                // using no slots textview to display error message
+//                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Something went wrong >>" + t.getMessage());
+            }
+        });
     }
 
 
@@ -465,8 +635,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             @Override
             public void onClick(View v) {
                 setNotifications();
+                registerUser();         // for email notifications -> register -> login -> set notifications
                 notificationsPopup.dismiss();
-                Toast.makeText(MainActivity.this, "Notifier set successfully!\nNow you can close the app but do not remove it from active processes.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "Notifier set successfully!\nNow you can close the app but do not remove it from active processes.", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -697,4 +868,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
     }
+
+
 }
