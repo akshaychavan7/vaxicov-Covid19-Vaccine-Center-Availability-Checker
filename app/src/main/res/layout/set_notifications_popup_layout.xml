@@ -49,15 +49,52 @@
                 android:background="@color/editTextBorder"
                 android:gravity="center_horizontal"
                 />
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="15dp"
-                android:text="In order to keep notifier active you'll need to keep app running in background. Thus, make sure that you do not remove app from background processes!"
-                android:elevation="3dp"
-                android:orientation="horizontal"
-                android:padding="7dp"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="15dp"
+                    android:text="➤"
+                    android:elevation="3dp"
+                    android:orientation="horizontal"
+                    android:padding="7dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="15dp"
+                    android:text="In order to keep app notifier active you'll need to keep app running in the background. So, make sure that you do not remove app from background processes!"
+                    android:elevation="3dp"
+                    android:orientation="horizontal"
+                    android:padding="7dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="➤"
+                    android:elevation="3dp"
+                    android:orientation="horizontal"
+                    android:padding="7dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="For Email notifications there's no need to keep the app running."
+                    android:elevation="3dp"
+                    android:orientation="horizontal"
+                    android:padding="7dp"/>
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.akshaychavan.vaxicov.utility;
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -13,6 +14,7 @@ public class GlobalCode {
 
     private static GlobalCode mInstance = null;
     int usersCount;
+    ProgressBar userCountProgressBar;
     GoogleSignInAccount accountDetails;
     GoogleSignInClient googleSignInClient;
     TextView tvUsersCount;
@@ -77,5 +79,13 @@ public class GlobalCode {
 
     public void setTvUsersCount(TextView tvUsersCount) {
         this.tvUsersCount = tvUsersCount;
+    }
+
+    public ProgressBar getUserCountProgressBar() {
+        return userCountProgressBar;
+    }
+
+    public void setUserCountProgressBar(ProgressBar userCountProgressBar) {
+        this.userCountProgressBar = userCountProgressBar;
     }
 }

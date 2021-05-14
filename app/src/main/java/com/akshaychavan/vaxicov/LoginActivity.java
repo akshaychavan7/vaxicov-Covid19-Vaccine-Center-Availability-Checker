@@ -176,6 +176,8 @@ public class LoginActivity extends AppCompatActivity {
 //                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
                         GlobalCode.getInstance().setUsersCount(Integer.parseInt(response));
                         GlobalCode.getInstance().getTvUsersCount().setText("Users count: "+response);
+                        GlobalCode.getInstance().getUserCountProgressBar().setVisibility(View.GONE);
+                        GlobalCode.getInstance().getTvUsersCount().setVisibility(View.VISIBLE);
                         Log.e(TAG, "Response>>" + response);
                     }
                 },

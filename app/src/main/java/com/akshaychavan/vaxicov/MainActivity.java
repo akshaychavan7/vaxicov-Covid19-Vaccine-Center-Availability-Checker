@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     RadioGroup rgFindBy;
     LinearLayout detailsTable;
     MaterialButton btnSearch, btnNotify;
-    ProgressBar progressBar;
+    ProgressBar progressBar, progressBarUserCount;
     TextView tvNoSlots, toolbarTitle, tvMadeBy, tvUsername, tvMail, usersCount, navHeaderTitle;
     ImageView profileIcon;
     ArrayAdapter<String> statesAdapter, districtsAdapter;
@@ -204,6 +204,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         tvNoSlots = findViewById(R.id.tv_no_slots);
         progressBar = findViewById(R.id.progressbar);
+        progressBarUserCount = findViewById(R.id.progressbar_user_count);
+        globalCode.setUserCountProgressBar(progressBarUserCount);
 
         // Setting up adapters
         availabilityDetailsRecylcer = findViewById(R.id.rv_availability_details);
@@ -438,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 //                    Log.e(TAG, "Response Code -> " + response.code());
                 if (response.isSuccessful()) {
                     if(response.body().getActive().toString().length()!=0) {
-                        Toast.makeText(MainActivity.this, "Email notifications set successfully!\nYou will get notifications over mail when slots become available.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Email notifications set successfully!\nYou will get notifications over app and mail when slots become available.", Toast.LENGTH_LONG).show();
                     }
 
                 } else {
@@ -704,7 +706,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
 
                     // check if slots are available or not
-                    if (availabilityDetailsList.size() == 0)       // no slots available
+                    if (availabilityDetailsList.size() == 0 && detailsTable.getVisibility()!=View.VISIBLE)       // no slots available
                     {
                         globalCode.setPin_availability(false);
                         tvNoSlots.setText("No slots available :(");
