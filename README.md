@@ -9,7 +9,7 @@
  <br />
  
  **Download Link:** 
-     [vaxicov.apk](https://drive.google.com/file/d/1K8hGB64rfmvi3YeXu6KoRZQ7_bXNVZ2H/view?usp=sharing)
+     [vaxicov.apk](https://drive.google.com/drive/folders/10mOlPJns443NzmLB4cT1zlBmhmNTuH0L?usp=sharing)
  
  <br />
  
