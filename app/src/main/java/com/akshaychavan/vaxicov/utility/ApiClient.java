@@ -2,7 +2,7 @@ package com.akshaychavan.vaxicov.utility;
 
 /**
  * Created by Akshay Chavan on 06,May,2021
- * akshaychavan.kkwedu@gmail.com.com
+ * akshaychavan.kkwedu@gmail.com
  */
 
 
@@ -19,9 +19,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class ApiClient {
 
 
-    private static final String BASE_URL = "https://cdn-api.co-vin.in/api/v2/";
-    private static final String BASE_URL2 = "https://api.countapi.xyz/hit/";
-    private static final String BASE_URL3 = "https://vaccine-notifier-covid-india.herokuapp.com/api/v1.0/";
+    private static final String BASE_URL = "https://cdn-api.co-vin.in/api/v2/XXXXX";
+    private static final String BASE_URL2 = "https://api.countapi.xyz/hit/XXXXX";
+    private static final String BASE_URL3 = "https://vaccine-notifier-covid-india.herokuapp.com/api/v1.0/XXXXX";
     private static Retrofit retrofit = null;
     private static Retrofit retrofit2 = null;
     private static Retrofit retrofit3 = null;
