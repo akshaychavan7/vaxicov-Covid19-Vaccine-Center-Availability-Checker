@@ -1,12 +1,14 @@
 package com.akshaychavan.vaxicov;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +26,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 
@@ -33,15 +34,25 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static final String SHARED_PREFS = "sharedprefs";
+    public static final String USER_NAME = "name";
+    public static final String USER_EMAIL = "email";
+    public static final String LOGIN_STATE = "login";
+    public static final String GOOGLE_SIGN_IN_ACC = "google_sign_in_account";
     private static final int RC_SIGN_IN = 0;
     final String KEY_ACTION = "action", KEY_NAME = "name", KEY_EMAIL = "email", KEY_IMAGE_URL = "photourl",
             ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbxUZPIwV3QjQ078UKHDuQ0TD3Ww0dq_O87Pg7iRZeE79REAf5gSc-ZGwPXs7w-MYpBx/exec";
     private final String TAG = "LoginActivity";
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount acct;
     String personName, personGivenName, personFamilyName, personEmail, personId;
     Uri personPhoto;
+    boolean loginState = false;     // default login state to be false
 
+    EditText etName, etEmail;
     MaterialButton signinButton;
     TextView titleText;
 
@@ -54,8 +65,14 @@ public class LoginActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
 
+        ////////////////////////////////////////////////////////////////////////
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        checkLoginState();      // check login state, if already logged in then directly open main activity
         bindVariables();
         bindEvents();
+        loadLoginDetails();
 
     }
 
@@ -75,6 +92,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void bindVariables() {
+        etName = findViewById(R.id.et_name);
+        etEmail = findViewById(R.id.et_email);
         signinButton = findViewById(R.id.signin);
         titleText = findViewById(R.id.tv_title);
         // setting toolbar title color gradient
@@ -110,29 +129,34 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    private void checkLoginState() {
+
+        // if already logged in then go to MainActivity
+        if (sharedPreferences.getBoolean(LOGIN_STATE, false)) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+
+
+            // Build a GoogleSignInClient with the options specified by gso.
+            mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this, gso);
+            GlobalCode.getInstance().setGoogleSignInClient(mGoogleSignInClient);
+
+            signIn();
+        }
+    }
+
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        Log.e(TAG, "Starting  startActivityForResult");
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         acct = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-//            updateUI(account);
-//            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
-            getUserAccountInfo();
-        } catch (ApiException e) {
-            Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
-            if (e.getStatusCode() == 12501) {
-                signIn();
-            }
-//            updateUI(null);
-        }
+        //           GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+        getUserAccountInfo();
     }
 
 
@@ -146,21 +170,22 @@ public class LoginActivity extends AppCompatActivity {
             personEmail = acct.getEmail();
             personId = acct.getId();
             personPhoto = acct.getPhotoUrl();
+
+            loginState = true;      // login success
 //            }
             addRecordToSheet();
 
             GlobalCode.getInstance().setAccountDetails(acct);
+
+
+            // save login details before moving to next activity
+            saveLoginDetails();
+
+            // move to next activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
-//            Log.e(TAG, "Name: " + personName + " Email: " + personEmail);
-//            tvUsername.setText(personName.toString());
-//            tvEmail.setText(personEmail.toString());
-//
-//            Glide.with(this)
-//                    .load(personPhoto)
-//                    .into(ivProfileIcon);
         } else {
-            Log.e(TAG, "else");
+            Log.e(TAG, "Google Account Details is NULL");
         }
     }
 
@@ -175,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        loading.dismiss();
 //                        Toast.makeText(LoginActivity.this, response, Toast.LENGTH_LONG).show();
                         GlobalCode.getInstance().setUsersCount(Integer.parseInt(response));
-                        GlobalCode.getInstance().getTvUsersCount().setText("Users count: "+response);
+                        GlobalCode.getInstance().getTvUsersCount().setText("Users count: " + response);
                         GlobalCode.getInstance().getUserCountProgressBar().setVisibility(View.GONE);
                         GlobalCode.getInstance().getTvUsersCount().setVisibility(View.VISIBLE);
                         Log.e(TAG, "Response>>" + response);
@@ -196,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
                 params.put(KEY_EMAIL, personEmail);
 
                 if (personPhoto != null) {
-                    Log.e(TAG, "photourl:" + "" + personPhoto.toString());
+//                    Log.e(TAG, "photourl:" + "" + personPhoto.toString());
                     params.put(KEY_IMAGE_URL, "" + personPhoto.toString());
                 } else {
                     params.put(KEY_IMAGE_URL, "No Image");
@@ -221,33 +246,23 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    // Saving user login data with Shared Preferences
+    public void saveLoginDetails() {
+        editor.putString(USER_NAME, personName);
+        editor.putString(USER_EMAIL, personEmail);
+        editor.putBoolean(LOGIN_STATE, loginState);
 
-//    public void getUsersCount() {
-//        ApiInterface apiInterface = ApiClient.getClientCounter().create(ApiInterface.class);
-//
-////        Log.e(TAG, ApiClient.getClient().baseUrl().toString());
-//
-//        Call<VisitingCounterPojo> call = apiInterface.getUsersCount();
-//
-//
-//        call.enqueue(new Callback<VisitingCounterPojo>() {
-//            @Override
-//            public void onResponse(Call<VisitingCounterPojo> call, retrofit2.Response<VisitingCounterPojo> response) {
-////                    Log.e(TAG, "Response Code -> " + response.code());
-//                if (response.isSuccessful()) {
-//                    GlobalCode.getInstance().setUsersCount(response.body().getValue());
-//                } else {
-//                    Log.e(TAG, "Failed URL>>" + response.raw().request().url());
-////                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<VisitingCounterPojo> call, Throwable t) {
-////                Toast.makeText(MainActivity.this, "Something went wrong!\n>>" + t.getMessage(), Toast.LENGTH_SHORT).show();
-//                Log.e(TAG, "Something went wrong >>" + t.getMessage());
-//            }
-//        });
-//    }
+        editor.apply();
+    }
+
+    // Fetching user's previous login details if previously logged in
+    public void loadLoginDetails() {
+        etName.setText(sharedPreferences.getString(USER_NAME, ""));
+        etEmail.setText(sharedPreferences.getString(USER_EMAIL, ""));
+        loginState = sharedPreferences.getBoolean(LOGIN_STATE, false);
+
+
+    }
+
 
 }

@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
@@ -60,13 +61,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,11 +80,11 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
+    public static final String SHARED_PREFS = "sharedprefs";
+    public static final String LOGIN_STATE = "login";
     public final String NOTIFICATION_CHANNEL_ID = "Channel1";
     private final String TAG = "MainActivity";
-//    final static String KEY = "Availability Status", VALUE_DISTRICT = "Available at District", VALUE_PIN = "Available at area", VALUE_UNAVAILABLE = "None";
     public String userID = null, token = null;
-
     GlobalCode globalCode = GlobalCode.getInstance();
     GoogleSignInAccount accountDetails;
     String findBy = "Pin";          // default -> pin, options-> pin OR district
@@ -94,9 +92,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     Toolbar toolbar;
 
     AlertDialog notificationsPopup;
-    String[] languages;
-    ArrayAdapter dropdownArrayAdapter;
-    AutoCompleteTextView agedropdownTextView;
     EditText etAgeGroup, etPin;
     AutoCompleteTextView etDistrict, etState;
     RadioGroup rgFindBy;
@@ -304,7 +299,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 if (performValidations()) {
                     switch (findBy.toLowerCase()) {
                         case "pin":
-                            findCalendarByPin(Integer.parseInt(etPin.getText().toString()), today);
+                            if (etPin.getText().length() == 6) {
+                                findCalendarByPin(Integer.parseInt(etPin.getText().toString()), today);
+                            } else {
+                                Toast.makeText(MainActivity.this, "Please make sure you input correct pin!", Toast.LENGTH_SHORT).show();
+                            }
                             break;
                         case "district":
                             findCalendarByDistrict(selectedDistrictID, today);
@@ -429,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         ApiInterface apiInterface = ApiClient.getNotificationClient().create(ApiInterface.class);
 
-        Log.e(TAG, "Email Notifications Params>>"+ emailNotificationObj.toString());
+        Log.e(TAG, "Email Notifications Params>>" + emailNotificationObj.toString());
 
         Call<SetNotificationsResponsePojo> call = apiInterface.setNotifications(userID, emailNotificationObj.toString(), token);
 
@@ -439,12 +438,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             public void onResponse(Call<SetNotificationsResponsePojo> call, Response<SetNotificationsResponsePojo> response) {
 //                    Log.e(TAG, "Response Code -> " + response.code());
                 if (response.isSuccessful()) {
-                    if(response.body().getActive().toString().length()!=0) {
+                    if (response.body().getActive().toString().length() != 0) {
                         Toast.makeText(MainActivity.this, "Email notifications set successfully!\nYou will get notifications over app and mail when slots become available.", Toast.LENGTH_LONG).show();
                     }
 
                 } else {
-                    Log.e(TAG, response.code()+" Error>>" + response.message()+ "\nURL>>" + response.raw().request().url());
+                    Log.e(TAG, response.code() + " Error>>" + response.message() + "\nURL>>" + response.raw().request().url());
 //                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -482,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         ApiInterface apiInterface = ApiClient.getNotificationClient().create(ApiInterface.class);
 
-        Log.e(TAG, "Register Params>>"+ registerUserObj.toString());
+        Log.e(TAG, "Register Params>>" + registerUserObj.toString());
 
         Call<UserRegistrationResponsePojo> call = apiInterface.registerUser(registerUserObj.toString());
 
@@ -495,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     Log.e(TAG, "Register User>> " + response.body().getMessage());
 
                 } else {
-                    Log.e(TAG, response.code()+" Error>>" + response.message()+ "\nURL>>" + response.raw().request().url());
+                    Log.e(TAG, response.code() + " Error>>" + response.message() + "\nURL>>" + response.raw().request().url());
 //                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -512,7 +511,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
     }
-
 
 
     public void loginUser() {
@@ -535,7 +533,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         ApiInterface apiInterface = ApiClient.getNotificationClient().create(ApiInterface.class);
 
-        Log.e(TAG, "Login Params>>"+ loginUserObj.toString());
+        Log.e(TAG, "Login Params>>" + loginUserObj.toString());
 
         Call<UserLoginResponsePojo> call = apiInterface.loginUser(loginUserObj.toString());
 
@@ -547,11 +545,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 if (response.isSuccessful()) {
                     Log.e(TAG, "Login User>> " + response.body().getId());
                     userID = response.body().getId();
-                    token = "Bearer "+response.body().getToken();
+                    token = "Bearer " + response.body().getToken();
 
                     setEmailNotifications();
                 } else {
-                    Log.e(TAG, response.code()+" Error>>" + response.body() + "\nURL>>" + response.raw().request().url());
+                    Log.e(TAG, response.code() + " Error>>" + response.body() + "\nURL>>" + response.raw().request().url());
 //                    Toast.makeText(MainActivity.this, "Response Error >> " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -672,7 +670,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }       // end findCenterByPin()
 
     public void findCalendarByPin(int pin, String date) {
-
         progressBar.setVisibility(View.VISIBLE);
         tvNoSlots.setVisibility(View.GONE);
 
@@ -706,7 +703,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
 
                     // check if slots are available or not
-                    if (availabilityDetailsList.size() == 0 && detailsTable.getVisibility()!=View.VISIBLE)       // no slots available
+                    if (availabilityDetailsList.size() == 0 && detailsTable.getVisibility() != View.VISIBLE)       // no slots available
                     {
                         globalCode.setPin_availability(false);
                         tvNoSlots.setText("No slots available :(");
@@ -861,6 +858,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
 
     private void logout() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean(LOGIN_STATE, false);
+        editor.apply();
+
         GoogleSignInClient mGoogleSignInClient = globalCode.getGoogleSignInClient();
 
         mGoogleSignInClient.signOut().addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
