@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 0;
     final String KEY_ACTION = "action", KEY_NAME = "name", KEY_EMAIL = "email", KEY_IMAGE_URL = "photourl",
-            ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbxUZPIwV3QjQ078UKHDuQ0TD3Ww0dq_O87Pg7iRZeE79REAf5gSc-ZGwPXs7w-MYpBx/exec";
+            ADD_RECORD_TO_SHEET_URL = "https://script.google.com/macros/s/AKfycbxUZPIwV3QjQ078UKHDuQ0TD3Ww0dq_O87Pg7iRZeE79REAf5gSc-ZGwPXs7w-MYpBx/execXXXXX";
     private final String TAG = "LoginActivity";
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount acct;
