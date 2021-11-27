@@ -1,4 +1,4 @@
-# vaxicov -  covid 19 vaccination slot finder and notifier app
+# VaxiCov -  covid 19 vaccination slot finder and notifier app
 
 
 **Introduction:**
@@ -26,4 +26,4 @@
 #
 * Soon will be available on Play Store  <br /> 
 
-&copy; Akshay Chavan
+&copy; Akshay Chavan & Jayesh Suryavanshi
