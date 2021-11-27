@@ -1,4 +1,4 @@
-# VaxiCov -  covid 19 vaccination slot finder and notifier app
+# VaxiCov -  Covid 19 Vaccination Slot Finder and Notifier Application
 
 
 **Introduction:**
