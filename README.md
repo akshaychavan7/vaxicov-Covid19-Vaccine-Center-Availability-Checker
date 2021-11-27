@@ -25,5 +25,6 @@
 
 #
 * Now Live on the Play Store!  <br /> 
+* [vaxicov.apk](https://play.google.com/store/apps/details?id=com.akshaychavan.vaxicov&hl=en_US&gl=US)
 
 &copy; Akshay Chavan & Jayesh Suryavanshi
