@@ -9,7 +9,7 @@
  <br />
  
  **Download Link:** 
-     [vaxicov.apk](https://drive.google.com/drive/folders/10mOlPJns443NzmLB4cT1zlBmhmNTuH0L?usp=sharing)
+     [Play Store]([https://drive.google.com/drive/folders/10mOlPJns443NzmLB4cT1zlBmhmNTuH0L?usp=sharing](https://play.google.com/store/apps/developer?id=BitTerrain+Developers))
  
  <br />
  
