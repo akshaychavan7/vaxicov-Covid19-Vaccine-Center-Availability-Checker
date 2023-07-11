@@ -1,4 +1,4 @@
-# vaxicov -  covid 19 vaccination slot finder and notifier app
+# VaxiCov -  Covid 19 Vaccination Slot Finder and Notifier Application
 
 
 **Introduction:**
@@ -9,7 +9,7 @@
  <br />
  
  **Download Link:** 
-     [vaxicov.apk](https://drive.google.com/drive/folders/10mOlPJns443NzmLB4cT1zlBmhmNTuH0L?usp=sharing)
+     [Play Store]([[https://drive.google.com/drive/folders/10mOlPJns443NzmLB4cT1zlBmhmNTuH0L?usp=sharing](https://play.google.com/store/apps/developer?id=BitTerrain+Developers)])
  
  <br />
  
@@ -24,6 +24,7 @@
 ![enter image description here](https://raw.githubusercontent.com/AkshayChavan7/vaxicov-Covid19-Vaccine-Center-Availability-Checker/master/Screenshots/4.png)
 
 #
-* Soon will be available on Play Store  <br /> 
+* Now Live on the Play Store!  <br /> 
+* [vaxicov.apk](https://play.google.com/store/apps/details?id=com.akshaychavan.vaxicov&hl=en_US&gl=US)
 
-&copy; Akshay Chavan
+&copy; Akshay Chavan & Jayesh Suryavanshi
