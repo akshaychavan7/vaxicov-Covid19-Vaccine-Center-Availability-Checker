@@ -24,6 +24,6 @@
 ![enter image description here](https://raw.githubusercontent.com/AkshayChavan7/vaxicov-Covid19-Vaccine-Center-Availability-Checker/master/Screenshots/4.png)
 
 #
-* Soon will be available on Play Store  <br /> 
+* Available on [Google Play Store](https://play.google.com/store/apps/details?id=com.akshaychavan.vaxicov&pli=1)  <br /> 
 
 &copy; Akshay Chavan
